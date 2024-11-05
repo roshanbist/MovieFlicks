@@ -1,3 +1,5 @@
+import { BadRequestError } from '../utils/CustomError.js';
+
 const getAllMovies = async (req, res, next) => {
   //
 };
@@ -6,8 +8,8 @@ const getMovieById = async (req, res, next) => {
   //
 };
 
-const createNewMovie = async (req, res, next) => {
-  //
+const createNewMovie = async (movieData) => {
+  return await movieData.save();
 };
 
 const updateMovieById = async (req, res, next) => {
