@@ -91,13 +91,14 @@ const MovieSchema = new mongoose.Schema({
   },
   cloudinaryId: {
     type: [String],
-    // required: [true, 'Movie Cloudinary Files ID is required field.'],
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
+
+// TODO: findOneAndDelete in pre hook
 
 // remove image from cloudinary if creating movie failed
 MovieSchema.post('save', async function (error, doc, next) {

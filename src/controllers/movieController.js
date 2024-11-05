@@ -1,17 +1,36 @@
 import MovieModel from '../model/MovieModel.js';
 import movieService from '../services/movieService.js';
 import { asyncErrorHandler } from '../utils/asyncErrorHandler.js';
-import { BadRequestError } from '../utils/CustomError.js';
+import { deleteFromCloudinary } from '../utils/cloudinaryConfig.js';
+import { BadRequestError, NotFoundError } from '../utils/CustomError.js';
 import { uploadFileGetUrls } from '../utils/fileUploadUtils.js';
 
 export const getAllMovies = asyncErrorHandler(async (req, res, next) => {
+  const movieList = await movieService.getAllMovies();
+
   //
-  res.send('get all the movies data');
+  res.status(200).json({
+    status: 'success',
+    message: 'All movies retrieved successfully',
+    data: movieList,
+  });
 });
 
-export const getMovieById = async (req, res, next) => {
-  //
-};
+export const getMovieById = asyncErrorHandler(async (req, res, next) => {
+  const movieId = req.params.id;
+
+  const movie = await movieService.getMovieById(movieId);
+
+  if (!movie) {
+    return next(new NotFoundError(`Movie with id: ${movieId} not found.`));
+  }
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Movie retrieved successfully',
+    data: movie,
+  });
+});
 
 export const createNewMovie = asyncErrorHandler(async (req, res, next) => {
   if (!req.files.length > 0) {
@@ -52,6 +71,23 @@ export const updateMovieById = async (req, res, next) => {
   //
 };
 
-export const deleteMovieById = async (req, res, next) => {
-  //
-};
+export const deleteMovieById = asyncErrorHandler(async (req, res, next) => {
+  const movieId = req.params.id;
+
+  const movie = await movieService.getMovieById(movieId);
+
+  if (!movie) {
+    return next(new NotFoundError(`Movie with id: ${movieId} not found.`));
+  }
+
+  if (movie.cloudinaryId && movie.cloudinaryId.length > 0) {
+    await Promise.all(movie.cloudinaryId.map((id) => deleteFromCloudinary(id)));
+  }
+
+  await movieService.deleteMovieById(movieId);
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Movie deleted successfully',
+  });
+});

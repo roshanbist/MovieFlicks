@@ -1,11 +1,11 @@
-import { BadRequestError } from '../utils/CustomError.js';
+import MovieModel from '../model/MovieModel.js';
 
-const getAllMovies = async (req, res, next) => {
-  //
+const getAllMovies = async () => {
+  return await MovieModel.find();
 };
 
-const getMovieById = async (req, res, next) => {
-  //
+const getMovieById = async (id) => {
+  return await MovieModel.findById(id);
 };
 
 const createNewMovie = async (movieData) => {
@@ -16,8 +16,8 @@ const updateMovieById = async (req, res, next) => {
   //
 };
 
-const deleteMovieById = async (req, res, next) => {
-  //
+const deleteMovieById = async (id) => {
+  return await MovieModel.findByIdAndDelete(id);
 };
 
 export default {

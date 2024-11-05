@@ -44,7 +44,13 @@ const duplicateErrorHandler = (error) => {
 const castErrorHandler = (error) => {
   const message = `Invalid value for ${error.path}: ${error.value}`;
 
-  return new BadRequestError(`Duplicate data: ${message}`);
+  return new BadRequestError(`${message}`);
+};
+
+const multerErrorHandler = (error) => {
+  const message = `There was an error while uploading file. Please try again`;
+
+  return new BadRequestError(`File upload error: ${message}`);
 };
 
 export const errorHandlingMiddleware = async (error, req, res, next) => {
@@ -68,6 +74,10 @@ export const errorHandlingMiddleware = async (error, req, res, next) => {
 
     if (error.name === 'CastError') {
       error = castErrorHandler(error);
+    }
+
+    if (error.name === 'MulterError') {
+      error = multerErrorHandler();
     }
 
     productionErrorHandler(res, error);

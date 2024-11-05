@@ -14,21 +14,6 @@ const routes = express.Router();
 routes.get('/', getAllMovies);
 routes.get('/:id', getMovieById);
 
-// routes.post(
-//   '/create',
-//   upload.fields([
-//     {
-//       name: 'product',
-//       maxCount: 1,
-//     },
-//     {
-//       name: 'image',
-//       maxCount: 1,
-//     },
-//   ]),
-//   getTestData
-// );
-
 routes.post('/', upload.array('images', 5), createNewMovie);
 
 routes.put('/:id', updateMovieById);
