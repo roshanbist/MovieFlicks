@@ -11,7 +11,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_SECRET_KEY,
 });
 
-// upload files
 export const uploadOnCloudinary = async (localFilePath) => {
   try {
     if (!localFilePath) {
@@ -22,12 +21,12 @@ export const uploadOnCloudinary = async (localFilePath) => {
       resource_type: 'auto',
     });
 
-    // remove the file from the temporary storage after the upload completes
+    // remove file from temporary storage after the upload completes
     fs.unlinkSync(localFilePath);
 
     return response;
   } catch (error) {
-    // remove the file from the temporary storage if there is any error during upload
+    // remove file from temporary storage if there is any error during upload
     fs.unlinkSync(localFilePath);
     return null;
   }

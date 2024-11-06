@@ -3,24 +3,15 @@ import movieService from '../services/movieService.js';
 import { asyncErrorHandler } from '../utils/asyncErrorHandler.js';
 import { BadRequestError, NotFoundError } from '../utils/CustomError.js';
 import { uploadFileGetUrls } from '../utils/fileUploadUtils.js';
-
-export const filterObjData = (obj, movie, ...allowedFields) => {
-  Object.keys(obj).forEach((key) => {
-    if (allowedFields.includes(key)) {
-      obj[key] = obj[key] ? JSON.parse(obj[key]) : movie[key];
-    }
-  });
-
-  return obj;
-};
+import { mergeAllowedFields } from '../utils/generalUtils.js';
 
 export const getAllMovies = asyncErrorHandler(async (req, res, next) => {
-  const { totalMovies, movieList } = await movieService.getAllMovies();
+  const { totalMovies, movieList } = await movieService.getAllMovies(req.query);
 
-  //
   res.status(200).json({
     status: 'success',
-    message: 'All movies retrieved successfully',
+    message:
+      totalMovies > 0 ? 'All movies retrieved successfully' : 'No movies found',
     totalMovies: totalMovies,
     data: movieList,
   });
@@ -95,7 +86,7 @@ export const updateMovieById = asyncErrorHandler(async (req, res, next) => {
     incomingMovieData.cloudinaryId = filesCloudinaryId;
   }
 
-  const filterMovieData = filterObjData(
+  const movieDataToUpdate = mergeAllowedFields(
     incomingMovieData,
     movie,
     'directors',
@@ -105,7 +96,7 @@ export const updateMovieById = asyncErrorHandler(async (req, res, next) => {
 
   const updatedMovie = await movieService.updateMovieById(
     movieId,
-    filterMovieData
+    movieDataToUpdate
   );
 
   res.status(200).json({

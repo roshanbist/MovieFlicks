@@ -1,8 +1,30 @@
 import MovieModel from '../model/MovieModel.js';
 
-const getAllMovies = async () => {
-  const totalMovies = await MovieModel.find().countDocuments();
-  const movieList = await MovieModel.find();
+const getAllMovies = async (queryParams) => {
+  // destruct query params
+  // create main query object empty
+  // check if name exist then add it to the query params
+  // run it by sending it to the find() as {}
+  const { name, genres, sort } = queryParams;
+  const query = {};
+
+  if (name) {
+    query.name = { $regex: name, $options: 'i' };
+  }
+
+  if (genres) {
+    query.genres = { $in: genres.split(',') };
+  }
+
+  let sortQuery;
+
+  if (sort) {
+    sortQuery = sort.split(',').join(' ');
+  }
+
+  const totalMovies = await MovieModel.find(query).countDocuments();
+  const movieList = await MovieModel.find(query).sort(sortQuery);
+
   return { totalMovies, movieList };
 };
 
