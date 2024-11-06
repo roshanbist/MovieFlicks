@@ -1,17 +1,27 @@
 import MovieModel from '../model/MovieModel.js';
 import movieService from '../services/movieService.js';
 import { asyncErrorHandler } from '../utils/asyncErrorHandler.js';
-import { deleteFromCloudinary } from '../utils/cloudinaryConfig.js';
 import { BadRequestError, NotFoundError } from '../utils/CustomError.js';
 import { uploadFileGetUrls } from '../utils/fileUploadUtils.js';
 
+export const filterObjData = (obj, movie, ...allowedFields) => {
+  Object.keys(obj).forEach((key) => {
+    if (allowedFields.includes(key)) {
+      obj[key] = obj[key] ? JSON.parse(obj[key]) : movie[key];
+    }
+  });
+
+  return obj;
+};
+
 export const getAllMovies = asyncErrorHandler(async (req, res, next) => {
-  const movieList = await movieService.getAllMovies();
+  const { totalMovies, movieList } = await movieService.getAllMovies();
 
   //
   res.status(200).json({
     status: 'success',
     message: 'All movies retrieved successfully',
+    totalMovies: totalMovies,
     data: movieList,
   });
 });
@@ -67,9 +77,43 @@ export const createNewMovie = asyncErrorHandler(async (req, res, next) => {
   });
 });
 
-export const updateMovieById = async (req, res, next) => {
-  //
-};
+export const updateMovieById = asyncErrorHandler(async (req, res, next) => {
+  const movieId = req.params.id;
+  const incomingMovieData = { ...req.body };
+
+  const movie = await MovieModel.findById(movieId);
+
+  if (!movie) {
+    return next(new NotFoundError(`Movie with id ${movieId} does not exist.`));
+  }
+
+  if (req.files && req.files.length > 0) {
+    const { uploadedFilesUrl, filesCloudinaryId } = await uploadFileGetUrls(
+      req.files
+    );
+    incomingMovieData.images = uploadedFilesUrl;
+    incomingMovieData.cloudinaryId = filesCloudinaryId;
+  }
+
+  const filterMovieData = filterObjData(
+    incomingMovieData,
+    movie,
+    'directors',
+    'actors',
+    'genres'
+  );
+
+  const updatedMovie = await movieService.updateMovieById(
+    movieId,
+    filterMovieData
+  );
+
+  res.status(200).json({
+    status: 'success',
+    data: updatedMovie,
+    message: 'Movie updated successfully',
+  });
+});
 
 export const deleteMovieById = asyncErrorHandler(async (req, res, next) => {
   const movieId = req.params.id;
@@ -78,10 +122,6 @@ export const deleteMovieById = asyncErrorHandler(async (req, res, next) => {
 
   if (!movie) {
     return next(new NotFoundError(`Movie with id: ${movieId} not found.`));
-  }
-
-  if (movie.cloudinaryId && movie.cloudinaryId.length > 0) {
-    await Promise.all(movie.cloudinaryId.map((id) => deleteFromCloudinary(id)));
   }
 
   await movieService.deleteMovieById(movieId);

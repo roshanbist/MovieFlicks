@@ -16,7 +16,8 @@ routes.get('/:id', getMovieById);
 
 routes.post('/', upload.array('images', 5), createNewMovie);
 
-routes.put('/:id', updateMovieById);
+// routes.put('/:id', updateMovieById);
+routes.put('/:id', upload.array('images', 5), updateMovieById);
 routes.delete('/:id', deleteMovieById);
 
 export default routes;
