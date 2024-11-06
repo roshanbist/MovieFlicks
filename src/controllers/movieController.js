@@ -36,7 +36,7 @@ export const createNewMovie = asyncErrorHandler(async (req, res, next) => {
   if (!req.files.length > 0) {
     return next(
       new BadRequestError(
-        'Movie images are missing. Please upload at least one image to proceed.'
+        'Movie images are missing. Upload at least one image to proceed.'
       )
     );
   }
