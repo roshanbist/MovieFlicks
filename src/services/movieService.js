@@ -1,31 +1,29 @@
 import MovieModel from '../model/MovieModel.js';
+import { mergeQueryParams } from '../utils/generalUtils.js';
 
 const getAllMovies = async (queryParams) => {
-  // destruct query params
-  // create main query object empty
-  // check if name exist then add it to the query params
-  // run it by sending it to the find() as {}
-  const { name, genres, sort } = queryParams;
-  const query = {};
+  let currentPage, limitPage, offset, totalPages, hasPreviousPage, hasNextPage;
 
-  if (name) {
-    query.name = { $regex: name, $options: 'i' };
-  }
-
-  if (genres) {
-    query.genres = { $in: genres.split(',') };
-  }
-
-  let sortQuery;
-
-  if (sort) {
-    sortQuery = sort.split(',').join(' ');
-  }
-
+  const { query, sortQuery } = mergeQueryParams(queryParams);
   const totalMovies = await MovieModel.find(query).countDocuments();
-  const movieList = await MovieModel.find(query).sort(sortQuery);
 
-  return { totalMovies, movieList };
+  if (queryParams.limit) {
+    currentPage = parseInt(queryParams.page) || 1;
+    limitPage = parseInt(queryParams.limit) || 10;
+    offset = (currentPage - 1) * 10;
+
+    totalPages = Math.ceil(totalMovies / limitPage);
+    hasPreviousPage = currentPage > 1;
+    hasNextPage = currentPage < totalPages;
+  }
+
+  const movieList = await MovieModel.find(query)
+    .sort(sortQuery)
+    .limit(limitPage)
+    .skip(offset)
+    .exec();
+
+  return { totalMovies, movieList, totalPages, hasPreviousPage, hasNextPage };
 };
 
 const getMovieById = async (id) => {

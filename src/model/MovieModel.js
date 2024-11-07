@@ -34,15 +34,15 @@ const MovieSchema = new mongoose.Schema({
       message: 'Ratings must be between 1 and 10.',
     },
   },
-  directors: {
-    type: [String],
+  director: {
+    type: String,
     required: [true, 'Movie Directors is required field.'],
-    validate: {
-      validator: function (value) {
-        return value && value.length > 0;
-      },
-      message: 'Movie Directors cannot be empty.',
-    },
+    // validate: {
+    //   validator: function (value) {
+    //     return value && value.length > 0;
+    //   },
+    //   message: 'Movie Directors cannot be empty.',
+    // },
   },
   actors: {
     type: [String],
@@ -80,7 +80,7 @@ const MovieSchema = new mongoose.Schema({
         'Biography',
       ],
       message:
-        'Invalid genre. Available genres are: Action, Adventure, Sci-Fi, Thriller, Crime, Drama, Comedy, Romance, Biography.',
+        'Available genres are: Action, Adventure, Sci-Fi, Thriller, Crime, Drama, Comedy, Romance, Biography.',
     },
     validate: {
       validator: function (value) {

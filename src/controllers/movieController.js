@@ -6,13 +6,17 @@ import { uploadFileGetUrls } from '../utils/fileUploadUtils.js';
 import { mergeAllowedFields } from '../utils/generalUtils.js';
 
 export const getAllMovies = asyncErrorHandler(async (req, res, next) => {
-  const { totalMovies, movieList } = await movieService.getAllMovies(req.query);
+  const { totalMovies, movieList, totalPage, hasPreviousPage, hasNextPage } =
+    await movieService.getAllMovies(req.query);
 
   res.status(200).json({
     status: 'success',
     message:
       totalMovies > 0 ? 'All movies retrieved successfully' : 'No movies found',
     totalMovies: totalMovies,
+    totalPages: totalPage,
+    hasPreviousPage: hasPreviousPage,
+    hasNextPage: hasNextPage,
     data: movieList,
   });
 });
@@ -53,9 +57,9 @@ export const createNewMovie = asyncErrorHandler(async (req, res, next) => {
   const movieData = new MovieModel({
     ...req.body,
     images: uploadedFilesUrl,
-    directors: req.body.directors ? JSON.parse(req.body.directors) : [],
+    // directors: req.body.directors ? JSON.parse(req.body.directors) : [],
     actors: req.body.actors ? JSON.parse(req.body.actors) : [],
-    genres: req.body.directors ? JSON.parse(req.body.genres) : [],
+    genres: req.body.genres ? JSON.parse(req.body.genres) : [],
     cloudinaryId: filesCloudinaryId,
   });
 
@@ -89,7 +93,6 @@ export const updateMovieById = asyncErrorHandler(async (req, res, next) => {
   const movieDataToUpdate = mergeAllowedFields(
     incomingMovieData,
     movie,
-    'directors',
     'actors',
     'genres'
   );
