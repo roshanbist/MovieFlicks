@@ -1,15 +1,17 @@
-export const register = async () => {
+const register = async (data) => {
+  return await data.save();
+};
+
+const login = async () => {
   //
 };
 
-export const login = async () => {
+const forgotPassword = async () => {
   //
 };
 
-export const forgotPassword = async () => {
+const resetPassword = async () => {
   //
 };
 
-export const resetPassword = async () => {
-  //
-};
+export default { register, login, forgotPassword, resetPassword };

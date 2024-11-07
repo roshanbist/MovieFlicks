@@ -37,12 +37,6 @@ const MovieSchema = new mongoose.Schema({
   director: {
     type: String,
     required: [true, 'Movie Directors is required field.'],
-    // validate: {
-    //   validator: function (value) {
-    //     return value && value.length > 0;
-    //   },
-    //   message: 'Movie Directors cannot be empty.',
-    // },
   },
   actors: {
     type: [String],

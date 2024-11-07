@@ -1,6 +1,8 @@
 import { uploadOnCloudinary } from './cloudinaryConfig.js';
 
 export const uploadFileGetUrls = async (files) => {
+  console.log('files', files);
+
   const uploadedFilesUrl = [];
   const filesCloudinaryId = [];
 

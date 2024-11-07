@@ -1,6 +1,8 @@
 import mongoose from 'mongoose';
 import validator from 'validator';
 
+import { hashPassword } from '../utils/authUtil.js';
+
 const UserSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -24,35 +26,49 @@ const UserSchema = new mongoose.Schema({
     lowercase: true,
     trim: true,
     required: [true, 'Email is a required field.'],
-    validate: [validator.isEmail(value), 'Please enter a valid email'],
+    validate: [validator.isEmail, 'Please enter a valid email'],
   },
   password: {
     type: String,
-    trim: true,
-    minLength: [6, 'Password must be at least 6 characters.'],
     required: [true, 'Password is a required field.'],
+    minLength: [6, 'Password must be at least 6 characters.'],
     select: false,
+    trim: true,
   },
   confirmPassword: {
     type: String,
+    trim: true,
     required: [true, 'Confirm Password is a required field.'],
     validate: {
-      validator: function (value) {
-        return value === this.password;
+      validator: function (pwd) {
+        return this.password === pwd;
       },
       message: 'Password and confirm password did not match.',
     },
   },
   avatar: {
-    type: String,
+    type: [String],
     required: [true, 'Avatar is a required field.'],
-    trim: true,
   },
   role: {
     type: String,
     enum: ['user', 'admin'],
     default: 'user',
   },
+  cloudinaryId: {
+    type: [String],
+    required: [true, 'CloudinaryId is a required field'],
+  },
+});
+
+UserSchema.pre('save', function (next) {
+  if (!this.isModified('password')) {
+    return next();
+  }
+
+  this.password = hashPassword(this.password);
+  this.confirmPassword = undefined;
+  next();
 });
 
 export default mongoose.model('User', UserSchema);
