@@ -92,32 +92,4 @@ const MovieSchema = new mongoose.Schema({
   },
 });
 
-// hook to delete movie images from cloudinary before deleting the movie
-MovieSchema.pre('findOneAndDelete', async function () {
-  const doc = await this.model.findOne(this.getFilter());
-
-  if (doc.cloudinaryId && doc.cloudinaryId.length > 0) {
-    await Promise.all(doc.cloudinaryId.map((id) => deleteFromCloudinary(id)));
-  }
-});
-
-// hook to delete movie image from cloudinary before updating movies (if replacing old movie images is followed)
-MovieSchema.pre('findOneAndUpdate', async function () {
-  const doc = await this.model.findOne(this.getFilter());
-
-  if (doc.cloudinaryId && doc.cloudinaryId.length > 0) {
-    await Promise.all(doc.cloudinaryId.map((id) => deleteFromCloudinary(id)));
-  }
-});
-
-// hook to remove image from cloudinary if creating movie failed
-MovieSchema.post('save', async function (error, doc, next) {
-  if (error) {
-    if (doc.cloudinaryId && doc.cloudinaryId.length > 0) {
-      await Promise.all(doc.cloudinaryId.map((id) => deleteFromCloudinary(id)));
-    }
-    next(error);
-  }
-});
-
 export default mongoose.model('Movie', MovieSchema);

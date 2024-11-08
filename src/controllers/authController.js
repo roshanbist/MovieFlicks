@@ -3,36 +3,73 @@ import { asyncErrorHandler } from '../utils/asyncErrorHandler.js';
 // import { hashPassword } from '../utils/authUtil.js';
 import authService from '../services/authService.js';
 import { uploadFileGetUrls } from '../utils/fileUploadUtils.js';
+import {
+  BadRequestError,
+  NotFoundError,
+  UnauthorizedError,
+} from '../utils/CustomError.js';
+import { comparePassword } from '../utils/authUtil.js';
 
 export const register = asyncErrorHandler(async (req, res, next) => {
-  // console.log(req.file);
-
-  if (req.file) {
-    console.log('hi');
-    // console.log(req.file.length);
-    // const { uploadedFilesUrl, filesCloudinaryId } = await uploadFileGetUrls(
-    //   req.file
-    // );
-    // req.body.avatar = uploadedFilesUrl;
-    // req.body.cloudinaryId = filesCloudinaryId;
+  if (!req.file) {
+    return next(
+      new BadRequestError('User avatar is missing. Please upload valid image.')
+    );
   }
 
-  console.log(req.body);
+  const { public_id, url } = await uploadFileGetUrls(req.file);
 
-  // const userData = new UserModel(req.body);
-  // const user = await authService.register(userData);
+  if (!public_id) {
+    return next(new BadRequestError('Image not uploaded. Please try again.'));
+  }
 
-  // console.log('user', user);
+  const userData = new UserModel({
+    ...req.body,
+    avatar: url,
+    avatarCloudinaryId: public_id,
+  });
 
-  // res.status(201).json({
-  //   status: 'success',
-  //   message: 'User registered successfully',
-  //   data: user,
-  // });
+  const user = await authService.register(userData);
+
+  res.status(201).json({
+    status: 'success',
+    message: 'User registered successfully',
+    data: user,
+  });
 });
 
 export const login = asyncErrorHandler(async (req, res, next) => {
-  //
+  // check if user exist with username or email
+  // check if password and confirm password match
+  // compare user entered password and db saved password
+  // if match then send the user to generate token
+  // return user with token, access token, user detail and message using cookie
+  const { username, password, confirmPassword } = req.body;
+
+  const user = await authService.findUserByUsernameOrEmail(username);
+  console.log('user', user);
+
+  if (!user) {
+    return next(
+      new NotFoundError(`User not found. Please enter correct credentials.`)
+    );
+  }
+
+  if (password !== confirmPassword) {
+    return next(
+      new BadRequestError('Password and confirm password did not match')
+    );
+  }
+
+  const matchPassword = await comparePassword(password, user.password);
+
+  if (!matchPassword) {
+    return next(
+      new UnauthorizedError(
+        'Password did not match. Please enter correct password'
+      )
+    );
+  }
 });
 
 export const forgotPassword = asyncErrorHandler(async (req, res, next) => {

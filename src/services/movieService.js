@@ -1,4 +1,5 @@
 import MovieModel from '../model/MovieModel.js';
+import { deleteFromCloudinary } from '../utils/cloudinaryConfig.js';
 import { mergeQueryParams } from '../utils/generalUtils.js';
 
 const getAllMovies = async (queryParams) => {
@@ -31,17 +32,43 @@ const getMovieById = async (id) => {
 };
 
 const createNewMovie = async (movieData) => {
-  return await movieData.save();
+  try {
+    return await movieData.save();
+  } catch (error) {
+    if (movieData.cloudinaryId && movieData.cloudinaryId.length > 0) {
+      await Promise.all(
+        movieData.cloudinaryId.map((id) => deleteFromCloudinary(id))
+      );
+    }
+
+    throw error;
+  }
 };
 
 const updateMovieById = async (id, movieData) => {
-  return await MovieModel.findByIdAndUpdate(id, movieData, {
-    new: true,
-    runValidators: true,
-  });
+  try {
+    return await MovieModel.findByIdAndUpdate(id, movieData, {
+      new: true,
+      runValidators: true,
+    });
+  } catch (error) {
+    if (movieData.cloudinaryId && movieData.cloudinaryId.length > 0) {
+      await Promise.all(
+        movieData.cloudinaryId.map((id) => deleteFromCloudinary(id))
+      );
+    }
+
+    throw error;
+  }
 };
 
 const deleteMovieById = async (id) => {
+  const movie = await MovieModel.findById(id);
+
+  if (movie.cloudinaryId && movie.cloudinaryId.length > 0) {
+    await Promise.all(movie.cloudinaryId.map((id) => deleteFromCloudinary(id)));
+  }
+
   return await MovieModel.findByIdAndDelete(id);
 };
 

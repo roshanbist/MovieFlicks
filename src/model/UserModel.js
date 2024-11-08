@@ -47,7 +47,7 @@ const UserSchema = new mongoose.Schema({
     },
   },
   avatar: {
-    type: [String],
+    type: String,
     required: [true, 'Avatar is a required field.'],
   },
   role: {
@@ -55,8 +55,8 @@ const UserSchema = new mongoose.Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
-  cloudinaryId: {
-    type: [String],
+  avatarCloudinaryId: {
+    type: String,
     required: [true, 'CloudinaryId is a required field'],
   },
 });
@@ -65,6 +65,8 @@ UserSchema.pre('save', function (next) {
   if (!this.isModified('password')) {
     return next();
   }
+
+  console.log('invoked');
 
   this.password = hashPassword(this.password);
   this.confirmPassword = undefined;

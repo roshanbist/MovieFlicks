@@ -57,7 +57,6 @@ export const createNewMovie = asyncErrorHandler(async (req, res, next) => {
   const movieData = new MovieModel({
     ...req.body,
     images: uploadedFilesUrl,
-    // directors: req.body.directors ? JSON.parse(req.body.directors) : [],
     actors: req.body.actors ? JSON.parse(req.body.actors) : [],
     genres: req.body.genres ? JSON.parse(req.body.genres) : [],
     cloudinaryId: filesCloudinaryId,
