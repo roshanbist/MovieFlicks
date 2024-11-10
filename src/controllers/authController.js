@@ -1,6 +1,5 @@
 import UserModel from '../model/UserModel.js';
 import { asyncErrorHandler } from '../utils/asyncErrorHandler.js';
-// import { hashPassword } from '../utils/authUtil.js';
 import authService from '../services/authService.js';
 import { uploadFileGetUrls } from '../utils/fileUploadUtils.js';
 import {
@@ -8,7 +7,12 @@ import {
   NotFoundError,
   UnauthorizedError,
 } from '../utils/CustomError.js';
-import { comparePassword } from '../utils/authUtil.js';
+import {
+  comparePassword,
+  generateAccessAndRefreshToken,
+  verifyRefreshToken,
+} from '../utils/authUtil.js';
+import { cookieConfigOption } from '../config/constants.js';
 
 export const register = asyncErrorHandler(async (req, res, next) => {
   if (!req.file) {
@@ -39,25 +43,27 @@ export const register = asyncErrorHandler(async (req, res, next) => {
 });
 
 export const login = asyncErrorHandler(async (req, res, next) => {
-  // check if user exist with username or email
-  // check if password and confirm password match
-  // compare user entered password and db saved password
-  // if match then send the user to generate token
-  // return user with token, access token, user detail and message using cookie
   const { username, password, confirmPassword } = req.body;
 
-  const user = await authService.findUserByUsernameOrEmail(username);
-  console.log('user', user);
-
-  if (!user) {
-    return next(
-      new NotFoundError(`User not found. Please enter correct credentials.`)
-    );
+  if (
+    [username, password, confirmPassword].some((field) => field?.trim() === '')
+  ) {
+    return next(new BadRequestError('Incomplete user login data.'));
   }
 
   if (password !== confirmPassword) {
     return next(
-      new BadRequestError('Password and confirm password did not match')
+      new BadRequestError(
+        'Password and confirm password did not match. Please try again.'
+      )
+    );
+  }
+
+  const user = await authService.findUserByUsernameOrEmail(username);
+
+  if (!user) {
+    return next(
+      new NotFoundError(`User not found. Please enter correct credentials.`)
     );
   }
 
@@ -70,6 +76,79 @@ export const login = asyncErrorHandler(async (req, res, next) => {
       )
     );
   }
+
+  const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+    user.id
+  );
+
+  const loggedUser = await UserModel.findById(user._id);
+
+  res
+    .status(200)
+    .cookie('accessToken', accessToken, cookieConfigOption)
+    .cookie('refreshToken', refreshToken, cookieConfigOption)
+    .json({
+      status: 'success',
+      message: 'User logged in successfully.',
+      accessToken: accessToken,
+      // refreshToken: refreshToken,
+      data: loggedUser,
+    });
+});
+
+export const logout = asyncErrorHandler(async (req, res, next) => {
+  const user = await UserModel.findById(req.user._id);
+
+  user.refreshToken = undefined;
+  await user.save({ validateBeforeSave: false });
+
+  res
+    .status(200)
+    .clearCookie('accessToken', cookieConfigOption)
+    .clearCookie('refreshToken', cookieConfigOption)
+    .json({
+      status: 'success',
+      message: 'user logged out successfully',
+      data: null,
+    });
+
+  // res.send('working');
+});
+
+export const refreshAccessToken = asyncErrorHandler(async (req, res, next) => {
+  const incomingRefreshToken =
+    req.cookies.refreshToken || req.body.refreshToken;
+
+  if (!incomingRefreshToken) {
+    return next(new UnauthorizedError('User not authorized.'));
+  }
+
+  const decodedToken = await verifyRefreshToken(incomingRefreshToken);
+
+  const user = await UserModel.findById(decodedToken.user.id);
+
+  if (incomingRefreshToken !== user.refreshToken) {
+    return next(
+      new UnauthorizedError('Refresh token has expired or already used.')
+    );
+  }
+
+  const { accessToken, refreshToken } = await generateAccessAndRefreshToken(
+    user._id
+  );
+
+  res
+    .status(200)
+    .cookie('accessToken', accessToken, cookieConfigOption)
+    .cookie('refreshToken', refreshToken, cookieConfigOption)
+    .json({
+      status: 'success',
+      message: 'Access Token refresh successfully',
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    });
+
+  res.send('testing');
 });
 
 export const forgotPassword = asyncErrorHandler(async (req, res, next) => {

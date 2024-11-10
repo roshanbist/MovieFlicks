@@ -59,6 +59,9 @@ const UserSchema = new mongoose.Schema({
     type: String,
     required: [true, 'CloudinaryId is a required field'],
   },
+  refreshToken: {
+    type: String,
+  },
 });
 
 UserSchema.pre('save', function (next) {
