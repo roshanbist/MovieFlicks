@@ -112,8 +112,6 @@ export const logout = asyncErrorHandler(async (req, res, next) => {
       message: 'user logged out successfully',
       data: null,
     });
-
-  // res.send('working');
 });
 
 export const refreshAccessToken = asyncErrorHandler(async (req, res, next) => {

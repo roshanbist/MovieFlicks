@@ -54,3 +54,15 @@ export const mergeQueryParams = (queryParams) => {
 
   return { query, sortQuery };
 };
+
+export const filterObjData = (obj, ...allowedFields) => {
+  const newFilterData = {};
+
+  Object.keys(obj).forEach((key) => {
+    if (allowedFields.includes(key)) {
+      newFilterData[key] = obj[key];
+    }
+  });
+
+  return newFilterData;
+};
