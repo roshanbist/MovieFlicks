@@ -2,7 +2,6 @@ import crypto from 'crypto';
 
 import UserModel from '../model/UserModel.js';
 import { deleteFromCloudinary } from '../utils/cloudinaryConfig.js';
-import { generateHashData } from '../utils/authUtil.js';
 import { ServerError } from '../utils/CustomError.js';
 import { sendEmail } from '../utils/templates/email/sendEmail.js';
 

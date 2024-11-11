@@ -7,9 +7,7 @@ import { UnauthorizedError } from './CustomError.js';
 export const generateHashData = (data) => {
   const saltRounds = 10;
   const salt = bcrypt.genSaltSync(saltRounds);
-  const result = bcrypt.hashSync(data, salt);
-  console.log('result', result);
-  return result;
+  return bcrypt.hashSync(data, salt);
 };
 
 export const compareHashData = async (plainData, hashedData) => {

@@ -7,17 +7,14 @@ import { uploadFileGetUrls } from '../utils/fileUploadUtils.js';
 import {
   BadRequestError,
   NotFoundError,
-  ServerError,
   UnauthorizedError,
 } from '../utils/CustomError.js';
 import {
   compareHashData,
   generateAccessAndRefreshToken,
-  generateHashData,
   verifyRefreshToken,
 } from '../utils/authUtil.js';
 import { cookieConfigOption } from '../config/constants.js';
-import { sendEmail } from '../utils/templates/email/sendEmail.js';
 
 export const register = asyncErrorHandler(async (req, res, next) => {
   if (!req.file) {
@@ -96,7 +93,6 @@ export const login = asyncErrorHandler(async (req, res, next) => {
       status: 'success',
       message: 'User logged in successfully.',
       accessToken: accessToken,
-      // refreshToken: refreshToken,
       data: loggedUser,
     });
 });

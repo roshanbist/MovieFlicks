@@ -4,6 +4,7 @@ import cookieParser from 'cookie-parser';
 
 import movieRoutes from './routes/movieRoutes.js';
 import authRoutes from './routes/authRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 import { errorHandlingMiddleware } from './middleware/errorHandlingMiddleware.js';
 import { invalidRouteHandler } from './utils/generalUtils.js';
 
@@ -16,6 +17,7 @@ app.use(cookieParser());
 
 app.use('/api/v1/movies', movieRoutes);
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/users', userRoutes);
 app.use('*', invalidRouteHandler);
 
 app.use(errorHandlingMiddleware);
