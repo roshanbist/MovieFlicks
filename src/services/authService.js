@@ -32,7 +32,10 @@ const forgotPassword = async (id) => {
 
   const resetToken = crypto.randomBytes(32).toString('hex');
 
-  const hashedResetToken = generateHashData(resetToken);
+  const hashedResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
 
   user.passwordResetToken = hashedResetToken;
   user.passwordResetTokenExpireTime = Date.now() + 10 * 60 * 1000;
@@ -52,10 +55,10 @@ const forgotPassword = async (id) => {
       template: './resetPasswordRequest.handlebars',
     });
 
-    const message = 'Password reset link was sent successfully';
-    const statusText = 'succes';
-
-    return { message, statusText };
+    return {
+      message: 'Password reset link was sent successfully',
+      status: 'success',
+    };
   } catch (error) {
     user.passwordResetToken = undefined;
     user.passwordResetTokenExpireTime = undefined;
@@ -67,10 +70,35 @@ const forgotPassword = async (id) => {
   }
 };
 
-const resetPassword = async (password, confirmPassword, id) => {
+const resetPassword = async (newPassword, newConfirmPassword, id) => {
   const user = await UserModel.findById(id);
 
-  await user.save()
+  user.password = newPassword;
+  user.confirmPassword = newConfirmPassword;
+  user.passwordResetToken = undefined;
+  user.passwordResetTokenExpireTime = undefined;
+
+  await user.save();
+
+  try {
+    await sendEmail({
+      to: user.email,
+      subject: 'Password Reset successfully',
+      payload: {
+        name: user.name,
+      },
+      template: './resetPassword.handlebars',
+    });
+
+    return {
+      message: 'Password reset was successful.',
+      status: 'success',
+    };
+  } catch (error) {
+    throw new ServerError(
+      'Error in reseting the password. Please try again later.'
+    );
+  }
 };
 
 export default {

@@ -1,3 +1,5 @@
+import crypto from 'crypto';
+
 import UserModel from '../model/UserModel.js';
 import { asyncErrorHandler } from '../utils/asyncErrorHandler.js';
 import authService from '../services/authService.js';
@@ -167,25 +169,12 @@ export const forgotPassword = asyncErrorHandler(async (req, res, next) => {
     );
   }
 
-  const { message, statusText } = await authService.forgotPassword(user._id);
+  const result = await authService.forgotPassword(user._id);
 
-  res.status(200).json({
-    status: statusText,
-    message: message,
-  });
+  res.status(200).json(result);
 });
 
 export const resetPassword = asyncErrorHandler(async (req, res, next) => {
-  // get token, confirm password, password
-  // convert token to hash token using bcyrpt
-  // find the user based on the token and passwordResetTokenExpireTime using findOne
-  // user exist then compare password and confirm password
-  // if not throw error
-  // if no match throw error
-  // if match set new password after hashing
-  // set password token and rexpire time undefined with confirm password undefined
-  // send email to user with message of password change successfully
-
   const token = req.params.token;
   const { password, confirmPassword } = req.body;
 
@@ -195,7 +184,7 @@ export const resetPassword = asyncErrorHandler(async (req, res, next) => {
     );
   }
 
-  const hashedToken = generateHashData(token);
+  const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
   const user = await UserModel.findOne({
     passwordResetToken: hashedToken,
@@ -210,9 +199,11 @@ export const resetPassword = asyncErrorHandler(async (req, res, next) => {
     );
   }
 
-  const newPassword = await authService.resetPassword(
+  const result = await authService.resetPassword(
     password,
     confirmPassword,
     user._id
   );
+
+  res.status(200).json(result);
 });
