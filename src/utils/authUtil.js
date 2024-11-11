@@ -4,14 +4,14 @@ import jwt from 'jsonwebtoken';
 import UserModel from '../model/UserModel.js';
 import { UnauthorizedError } from './CustomError.js';
 
-export const hashPassword = (password) => {
+export const generateHashData = (data) => {
   const saltRounds = 10;
   const salt = bcrypt.genSaltSync(saltRounds);
-  return bcrypt.hashSync(password, salt);
+  return bcrypt.hashSync(data, salt);
 };
 
-export const comparePassword = async (plainPassword, encryptPassword) => {
-  return await bcrypt.compare(plainPassword, encryptPassword);
+export const compareHashData = async (plainData, hashedData) => {
+  return await bcrypt.compare(plainData, hashedData);
 };
 
 export const generateAccessAndRefreshToken = async (id) => {
@@ -58,8 +58,21 @@ export const verifyRefreshToken = async (token) => {
 
   return jwt.verify(token, REFRESH_TOKEN_SECRET_KEY, function (err, decoded) {
     if (err) {
-      // TODO: error.name change garnu paryo like verifyJWTTOken
-      throw new UnauthorizedError('Invalid refresh token.');
+      if (err.name === 'TokenExpiredError') {
+        return next(
+          new UnauthorizedError('Refresh Token has expired. Please login.')
+        );
+      }
+
+      if (err.name === 'JsonWebTokenError') {
+        return next(
+          new UnauthorizedError('Invalid Token. Please login again.')
+        );
+      }
+
+      return next(
+        new UnauthorizedError('Authorization failed. Please try again.')
+      );
     }
 
     return decoded;

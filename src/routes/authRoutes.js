@@ -18,6 +18,6 @@ routes.post('/register', upload.single('avatar'), register);
 routes.post('/login', login);
 routes.post('/logout', verifyJwtToken, logout);
 routes.post('/forgot-password', forgotPassword);
-routes.post('/resetPassword/:token', resetPassword);
+routes.post('/reset-password/:token', resetPassword);
 
 export default routes;

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import validator from 'validator';
 
-import { hashPassword } from '../utils/authUtil.js';
+import { generateHashData } from '../utils/authUtil.js';
 
 const UserSchema = new mongoose.Schema({
   name: {
@@ -62,6 +62,8 @@ const UserSchema = new mongoose.Schema({
   refreshToken: {
     type: String,
   },
+  passwordResetToken: String,
+  passwordResetTokenExpireTime: Date,
 });
 
 UserSchema.pre('save', function (next) {
@@ -69,9 +71,7 @@ UserSchema.pre('save', function (next) {
     return next();
   }
 
-  console.log('invoked');
-
-  this.password = hashPassword(this.password);
+  this.password = generateHashData(this.password);
   this.confirmPassword = undefined;
   next();
 });

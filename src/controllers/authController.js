@@ -5,14 +5,17 @@ import { uploadFileGetUrls } from '../utils/fileUploadUtils.js';
 import {
   BadRequestError,
   NotFoundError,
+  ServerError,
   UnauthorizedError,
 } from '../utils/CustomError.js';
 import {
-  comparePassword,
+  compareHashData,
   generateAccessAndRefreshToken,
+  generateHashData,
   verifyRefreshToken,
 } from '../utils/authUtil.js';
 import { cookieConfigOption } from '../config/constants.js';
+import { sendEmail } from '../utils/templates/email/sendEmail.js';
 
 export const register = asyncErrorHandler(async (req, res, next) => {
   if (!req.file) {
@@ -67,7 +70,7 @@ export const login = asyncErrorHandler(async (req, res, next) => {
     );
   }
 
-  const matchPassword = await comparePassword(password, user.password);
+  const matchPassword = await compareHashData(password, user.password);
 
   if (!matchPassword) {
     return next(
@@ -152,9 +155,64 @@ export const refreshAccessToken = asyncErrorHandler(async (req, res, next) => {
 });
 
 export const forgotPassword = asyncErrorHandler(async (req, res, next) => {
-  //
+  const { username } = req.body;
+
+  const user = await authService.findUserByUsernameOrEmail(username);
+
+  if (!user) {
+    return next(
+      new BadRequestError(
+        'User does not exist. Please enter valid username or email.'
+      )
+    );
+  }
+
+  const { message, statusText } = await authService.forgotPassword(user._id);
+
+  res.status(200).json({
+    status: statusText,
+    message: message,
+  });
 });
 
 export const resetPassword = asyncErrorHandler(async (req, res, next) => {
-  //
+  // get token, confirm password, password
+  // convert token to hash token using bcyrpt
+  // find the user based on the token and passwordResetTokenExpireTime using findOne
+  // user exist then compare password and confirm password
+  // if not throw error
+  // if no match throw error
+  // if match set new password after hashing
+  // set password token and rexpire time undefined with confirm password undefined
+  // send email to user with message of password change successfully
+
+  const token = req.params.token;
+  const { password, confirmPassword } = req.body;
+
+  if (password !== confirmPassword) {
+    return next(
+      new BadRequestError('Password and confirm password did not match.')
+    );
+  }
+
+  const hashedToken = generateHashData(token);
+
+  const user = await UserModel.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetTokenExpireTime: { $gt: Date.now() },
+  });
+
+  if (!user) {
+    return next(
+      new NotFoundError(
+        'User not found. Token is either invalid or has expired. Please try again.'
+      )
+    );
+  }
+
+  const newPassword = await authService.resetPassword(
+    password,
+    confirmPassword,
+    user._id
+  );
 });
