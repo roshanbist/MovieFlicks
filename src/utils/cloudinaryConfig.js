@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 
 dotenv.config({ path: '.env' });
 
-// configuraiton
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -26,10 +25,8 @@ export const uploadOnCloudinary = async (localFilePath) => {
 
     return response;
   } catch (error) {
-    // remove file from temporary storage if there is any error during upload
-
+    // remove file from temporary storage if there is any error during upload to cloudinary
     fs.unlinkSync(localFilePath);
-    console.log('ya aayo ra');
     return null;
   }
 };

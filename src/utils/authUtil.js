@@ -45,7 +45,6 @@ export const generateAccessAndRefreshToken = async (id) => {
     { expiresIn: '1d' }
   );
 
-  // save refreshToken in user document and then to db
   user.refreshToken = refreshToken;
 
   await user.save({ validateBeforeSave: false });

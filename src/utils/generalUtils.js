@@ -16,10 +16,6 @@ export const invalidRouteHandler = async (req, res, next) => {
   next(new NotFoundError(`Can't find ${req.originalUrl} on the server`));
 };
 
-// export checkAllDataField = async(...dataFields) {
-//   return dataFields.some((field) => field?.trim() === "")
-// }
-
 // Merge query parameter
 export const mergeQueryParams = (queryParams) => {
   const { name, genres, min_duration, max_duration, sort } = queryParams;
@@ -55,6 +51,7 @@ export const mergeQueryParams = (queryParams) => {
   return { query, sortQuery };
 };
 
+// return object containing filterdata
 export const filterObjData = (obj, ...allowedFields) => {
   const newFilterData = {};
 

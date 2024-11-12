@@ -62,12 +62,10 @@ export const errorHandlingMiddleware = async (error, req, res, next) => {
   }
 
   if (process.env.NODE_ENV === 'production') {
-    // validation error
     if (error.name === 'ValidationError') {
       error = validationErrorHandler(error);
     }
 
-    // duplicate error
     if (error.code === 11000) {
       error = duplicateErrorHandler(error);
     }

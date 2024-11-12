@@ -14,18 +14,14 @@ const getAllMovies = async (queryParams) => {
 
   const { query, sortQuery } = mergeQueryParams(queryParams);
 
-  console.log('query', query);
-
   if (Object.keys(query).length > 0) {
     queryMatchingMovies = await MovieModel.find(query).countDocuments(); // total movie after filter
   }
 
-  // const totalMovies = await MovieModel.find(query).countDocuments();
   const totalMovies = await MovieModel.find().countDocuments(); // total movie in db
 
   if (queryParams.limit) {
     currentPage = parseInt(queryParams.page) || 1;
-    // limitPage = parseInt(queryParams.limit) || 10;
     limitPage = parseInt(queryParams.limit);
     offset = (currentPage - 1) * limitPage;
 
@@ -41,9 +37,6 @@ const getAllMovies = async (queryParams) => {
       );
     }
   }
-
-  // console.log('offset', offset);
-  // console.log('totalPages', totalPages);
 
   const movieList = await MovieModel.find(query)
     .sort(sortQuery)
