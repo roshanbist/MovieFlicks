@@ -8,13 +8,15 @@ import {
 } from '../controllers/movieController.js';
 
 import { upload } from '../middleware/multerMiddleware.js';
+import { authMiddleware } from '../middleware/authMiddleware.js';
+import { authorizeAdmin } from '../middleware/accessControlMiddleware.js';
 
 const routes = express.Router();
 
 routes.get('/', getAllMovies);
 routes.get('/:id', getMovieById);
-routes.post('/', upload.array('images', 5), createNewMovie);
-routes.put('/:id', upload.array('images', 5), updateMovieById);
-routes.delete('/:id', deleteMovieById);
+routes.post('/', authMiddleware, upload.array('images', 5), createNewMovie);
+routes.put('/:id', authMiddleware, upload.array('images', 5), updateMovieById);
+routes.delete('/:id', authMiddleware, authorizeAdmin, deleteMovieById);
 
 export default routes;

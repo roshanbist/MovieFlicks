@@ -115,20 +115,27 @@ export const logout = asyncErrorHandler(async (req, res, next) => {
 });
 
 export const refreshAccessToken = asyncErrorHandler(async (req, res, next) => {
-  const incomingRefreshToken =
-    req.cookies.refreshToken || req.body.refreshToken;
+  const incomingRefreshToken = req.cookies.refreshToken;
 
   if (!incomingRefreshToken) {
-    return next(new UnauthorizedError('User not authorized.'));
+    return next(
+      new UnauthorizedError(
+        'Refresh token not found. Please login to continue.'
+      )
+    );
   }
 
   const decodedToken = await verifyRefreshToken(incomingRefreshToken);
 
-  const user = await UserModel.findById(decodedToken.user.id);
+  const user = await UserModel.findById(decodedToken.user.id).select(
+    '+refreshToken'
+  );
 
   if (incomingRefreshToken !== user.refreshToken) {
     return next(
-      new UnauthorizedError('Refresh token has expired or already used.')
+      new UnauthorizedError(
+        'Invalid or expired refresh token. Please log in again.'
+      )
     );
   }
 
@@ -144,10 +151,7 @@ export const refreshAccessToken = asyncErrorHandler(async (req, res, next) => {
       status: 'success',
       message: 'Access Token refresh successfully',
       accessToken: accessToken,
-      refreshToken: refreshToken,
     });
-
-  res.send('testing');
 });
 
 export const forgotPassword = asyncErrorHandler(async (req, res, next) => {

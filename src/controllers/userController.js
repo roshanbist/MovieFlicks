@@ -1,27 +1,20 @@
+import fs from 'fs';
+
 import UserModel from '../model/UserModel.js';
 import userService from '../services/userService.js';
 import { asyncErrorHandler } from '../utils/asyncErrorHandler.js';
 import { compareHashData } from '../utils/authUtil.js';
 import {
   BadRequestError,
+  ForbiddenError,
   NotFoundError,
   UnauthorizedError,
 } from '../utils/CustomError.js';
 import { uploadFileGetUrls } from '../utils/fileUploadUtils.js';
 import { filterObjData } from '../utils/generalUtils.js';
 
-export const loggedUserPayload = async (req) => {
-  const userPayload = req.user;
-
-  if (!userPayload) {
-    throw new UnauthorizedError('User not found. Please login.');
-  }
-
-  return userPayload;
-};
-
 export const getAllUsers = asyncErrorHandler(async (req, res, next) => {
-  const { totalUsers, users } = await UserModel.getAllUsers();
+  const { totalUsers, users } = await userService.getAllUsers();
 
   res.status(200).json({
     status: 'success',
@@ -54,7 +47,18 @@ export const updateUserById = asyncErrorHandler(async (req, res, next) => {
     );
   }
 
+  if (req.user?._id.toString() !== req.params.id) {
+    fs.unlinkSync(req.file.path);
+
+    return next(
+      new ForbiddenError(
+        'You do not have permission to access other users resource.'
+      )
+    );
+  }
+
   if (req.body.password || req.body.confirmPassword) {
+    fs.unlinkSync(req.file.path);
     return next(
       new BadRequestError('Updating password is done through another endpoint')
     );
@@ -106,7 +110,7 @@ export const changePassword = asyncErrorHandler(async (req, res, next) => {
   if (await compareHashData(req.body.password, user.password)) {
     return next(
       new BadRequestError(
-        'New password is same as old password. Please enter different password.'
+        'New password is same as old password. Please try again.'
       )
     );
   }
@@ -120,5 +124,17 @@ export const changePassword = asyncErrorHandler(async (req, res, next) => {
 });
 
 export const deleteUserById = asyncErrorHandler(async (req, res, next) => {
-  //
+  const user = await UserModel.findById(req.params.id);
+
+  if (!user) {
+    return next(new NotFoundError('User does not exist.'));
+  }
+
+  await userService.deleteUserById(req.params.id);
+
+  res.status(200).json({
+    status: 'success',
+    message: 'User deleted successfully.',
+    data: null,
+  });
 });

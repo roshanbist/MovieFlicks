@@ -83,7 +83,7 @@ const MovieSchema = new mongoose.Schema({
       message: 'Genre cannot be empty',
     },
   },
-  cloudinaryId: {
+  imagesCloudinaryId: {
     type: [String],
   },
   createdAt: {

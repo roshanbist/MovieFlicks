@@ -55,8 +55,8 @@ const forgotPassword = async (id) => {
     });
 
     return {
-      message: 'Password reset link was sent successfully',
       status: 'success',
+      message: 'Password reset link was sent successfully',
     };
   } catch (error) {
     user.passwordResetToken = undefined;
@@ -90,8 +90,8 @@ const resetPassword = async (newPassword, newConfirmPassword, id) => {
     });
 
     return {
-      message: 'Password reset was successful.',
       status: 'success',
+      message: 'Password reset was successful.',
     };
   } catch (error) {
     throw new ServerError(
