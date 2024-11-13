@@ -88,19 +88,19 @@ There are two models designed in this project.
 
 ### Movie Model
 
-| Field              | Type       | Required | Unique                              | Validation/Constraints                           |
-| :----------------- | :--------- | :------- | ----------------------------------- | ------------------------------------------------ |
-| name               | String Yes | Yes      | Min 4 characters, Max 50 characters |
-| description        | String     | Yes      | No                                  | Brief movie description                          |
-| releaseYear        | Number     | Yes      | No                                  | Release year of the movie                        |
-| duration           | Number     | Yes      | No                                  | Duration in minutes                              |
-| ratings            | Number     | Yes      | No                                  | Must be between 1 and 10                         |
-| director           | String     | Yes      | No                                  | Director's name                                  |
-| actors             | [String]   | Yes      | No                                  | Array of actor names, cannot be empty            |
-| images             | [String]   | Yes      | No                                  | Array of image URLs                              |
-| genres             | [String]   | Yes      | No                                  | Array, enum of valid genres: Action, Drama, etc. |
-| imagesCloudinaryId | [String]   | No       | No                                  | Cloudinary IDs for images                        |
-| createdAt          | Date       | No       | No                                  | Defaults to current date                         |
+| Field              | Type     | Required | Unique | Validation/Constraints                           |
+| :----------------- | :------- | :------- | ------ | ------------------------------------------------ |
+| name               | String   | Yes      | Yes    | Min 4 characters, Max 50 characters              |
+| description        | String   | Yes      | No     | Brief movie description                          |
+| releaseYear        | Number   | Yes      | No     | Release year of the movie                        |
+| duration           | Number   | Yes      | No     | Duration in minutes                              |
+| ratings            | Number   | Yes      | No     | Must be between 1 and 10                         |
+| director           | String   | Yes      | No     | Director's name                                  |
+| actors             | [String] | Yes      | No     | Array of actor names, cannot be empty            |
+| images             | [String] | Yes      | No     | Array of image URLs                              |
+| genres             | [String] | Yes      | No     | Array, enum of valid genres: Action, Drama, etc. |
+| imagesCloudinaryId | [String] | No       | No     | Cloudinary IDs for images                        |
+| createdAt          | Date     | No       | No     | Defaults to current date                         |
 
 ### User Model
 
@@ -124,8 +124,8 @@ There are two models designed in this project.
 
 #### Register a new user
 
-```http
-  POST /api/v1/users/register
+```
+  POST /api/v1/auth/register
 ```
 
 | Parameter  | Type     | Description                             |
