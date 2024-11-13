@@ -9,6 +9,7 @@ Movieflicks is a backend API project developed with Express.js and MongoDB for m
 - [Models](#models)
 - [API Endpoints](#api-endpoints)
 - [Technologies Used](#technologies-used)
+- [Screenshots](#screenshots)
 
 ## Features
 
@@ -153,7 +154,7 @@ There are two models designed in this project.
 | PUT         | `/api/v1/movies/:id`                    | Update the details of an existing movie by its ID. (user logged in required).       |
 | DELETE      | `/api/v1/movies/:id`                    | Delete a movie from the database by its ID (admin access required).                 |
 
-## Fiter Movie API
+## Filter Movie API
 
 | HTTP METHOD | Endpoint                                                                               | Description                                                       |
 | :---------- | :------------------------------------------------------------------------------------- | :---------------------------------------------------------------- |
@@ -165,8 +166,17 @@ There are two models designed in this project.
 ## Technologies Used
 
 - **Node.js** - Backend runtime environment
-- **Express** - Web framework for Node.js
-- **TypeScript** - Type-safe JavaScript
+- **Express** - Web framework for building APIs
 - **MongoDB** - NoSQL database
-- **JWT** - Authentication tokens
+- **JWT**- Authentication tokens
 - **bcrypt** - Password hashing
+- **Multer** - Middleware for file uploads
+- **Cloudinary** - Image storage
+- **Utilities** - dotenv for environment variables, validator for data validation
+- **Nodemailer** - Used for sending emails like password resets and notifications
+- **Mailtrap** - Email testing tool to catch and preview emails in a safe environment
+
+## Screenshots
+
+![Password Reset Request](./src/screenshots/password-reset-request.png)
+![Password Reset Success](./src/screenshots/password-reset-success.png)
