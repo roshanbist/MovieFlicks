@@ -1,5 +1,3 @@
-import fs from 'fs';
-
 import UserModel from '../model/UserModel.js';
 import userService from '../services/userService.js';
 import { asyncErrorHandler } from '../utils/asyncErrorHandler.js';
@@ -13,7 +11,7 @@ import {
 import { uploadFileGetUrls } from '../utils/fileUploadUtils.js';
 import { filterObjData } from '../utils/generalUtils.js';
 
-export const getAllUsers = asyncErrorHandler(async (req, res, next) => {
+export const getAllUsers = asyncErrorHandler(async (_, res, __) => {
   const { totalUsers, users } = await userService.getAllUsers();
 
   res.status(200).json({
@@ -48,8 +46,6 @@ export const updateUserById = asyncErrorHandler(async (req, res, next) => {
   }
 
   if (req.user?._id.toString() !== req.params.id) {
-    fs.unlinkSync(req.file.path);
-
     return next(
       new ForbiddenError(
         'You do not have permission to access other users resource.'
@@ -58,7 +54,6 @@ export const updateUserById = asyncErrorHandler(async (req, res, next) => {
   }
 
   if (req.body.password || req.body.confirmPassword) {
-    fs.unlinkSync(req.file.path);
     return next(
       new BadRequestError('Updating password is done through another endpoint')
     );

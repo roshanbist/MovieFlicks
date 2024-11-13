@@ -5,7 +5,7 @@ import { BadRequestError, NotFoundError } from '../utils/CustomError.js';
 import { uploadFileGetUrls } from '../utils/fileUploadUtils.js';
 import { mergeAllowedFields } from '../utils/generalUtils.js';
 
-export const getAllMovies = asyncErrorHandler(async (req, res, next) => {
+export const getAllMovies = asyncErrorHandler(async (req, res, _) => {
   const {
     totalMovies,
     queryMatchingMovies,

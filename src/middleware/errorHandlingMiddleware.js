@@ -53,7 +53,7 @@ const multerErrorHandler = (error) => {
   return new BadRequestError(`File upload error: ${message}`);
 };
 
-export const errorHandlingMiddleware = async (error, req, res, next) => {
+export const errorHandlingMiddleware = async (error, _, res, __) => {
   error.statusCode = error.statusCode || 500;
   error.status = error.status || 'error';
 

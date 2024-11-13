@@ -97,7 +97,7 @@ export const login = asyncErrorHandler(async (req, res, next) => {
     });
 });
 
-export const logout = asyncErrorHandler(async (req, res, next) => {
+export const logout = asyncErrorHandler(async (req, res, _) => {
   const user = await UserModel.findById(req.user._id);
 
   user.refreshToken = undefined;

@@ -1,6 +1,5 @@
 import { NotFoundError } from './CustomError.js';
 
-// Merge allowed fields from movie object with the object passed in
 export const mergeAllowedFields = (obj, movie, ...allowedFields) => {
   Object.keys(obj).forEach((key) => {
     if (allowedFields.includes(key)) {
@@ -51,7 +50,6 @@ export const mergeQueryParams = (queryParams) => {
   return { query, sortQuery };
 };
 
-// return object containing filterdata
 export const filterObjData = (obj, ...allowedFields) => {
   const newFilterData = {};
 
