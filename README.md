@@ -1,35 +1,30 @@
 # Movieflicks Backend
 
-Movieflicks is a robust backend API developed with Express.js and MongoDB for managing a comprehensive movie database. Designed with best practices in mind, Movieflicks offers full CRUD functionality for both user and movie management, along with JWT-based authentication for secure access. It supports cloud storage for images via Cloudinary, making it an ideal project for those learning to build and connect with RESTful APIs efficiently.
-
-Key features include:
-
-- ✅ Comprehensive CRUD operations
-- ✅ JWT-based authentication
-- ✅ Image upload and storage with Cloudinary
-- ✅ Advanced movie filtering by name, duration, and genres
-- ✅ User registration with duplicate checks
+Movieflicks is a backend API project developed with Express.js and MongoDB for managing a movie database. Designed with best practices in mind, Movieflicks offers full CRUD functionality for both user and movie management, along with JWT-based authentication for secure access. It supports cloud storage for images via Cloudinary, making it an ideal project for those learning to build and connect with RESTful APIs efficiently.
 
 ## Table of Contents
 
-- [Entity Relationship Diagram](#entity-relationship-diagram)
 - [Features](#features)
 - [Getting Started](#getting-started)
 - [Project Folder Structure](#project-folder-structure)
 - [API Reference](#api-reference)
 - [Technologies Used](#technologies-used)
 
-## Entity Relationship Diagram
-
-![ERD Diagram](./src/assets/ERD-contact-management.png)
-
 ## Features
 
-- User authentication using JWT (Json Web Token)
-- Password encryption using bcrypt
-- CRUD operations for contacts
-- Environment configuration using dotenv
-- Database connection with MongoDB via Mongoose
+Key features includes:
+
+- ✅ Comprehensive CRUD operations
+- ✅ JWT-based authentication
+- ✅ Image upload and storage with Cloudinary
+- ✅ Advanced movie filtering by name, duration, and genres
+- ✅ Pagination for efficient data retrieval
+- ✅ User registration with duplicate checks
+- ✅ Password encryption using bcrypt
+- ✅ Password Recovery: Forgot password and reset password functionality, with secure email notifications
+- ✅ Email Notifications via Nodemailer for password reset links and confirmation of successful password changes
+- ✅ Mailtrap integration for email functionality testing
+- ✅ Environment configuration using dotenv
 
 ## Getting Started
 
@@ -44,14 +39,14 @@ To get started with the project, follow the steps below:
 #### 1.Clone the repository:
 
 ```bash
-$ git clone git@github.com:roshanbist/contactManagement.git
-$ cd contactManagement
+$ git clone git@github.com:roshanbist/MovieFlicks.git
+$ cd MovieFlicks
 ```
 
 #### 2.Install dependencies:
 
 ```bash
-$ npm install    # Install project dependencies
+$ npm install
 ```
 
 #### 3.Set up environment variables
@@ -60,6 +55,19 @@ $ npm install    # Install project dependencies
 PORT=your_server_port_address
 MONGO_URI=your_mongodb_uri
 JWT_SECRET=your_jwt_secret
+
+MONGODB_URL=<MongoB connection URI>
+PORT=<Server Port>
+CLIENT_URL=
+CLOUDINARY_CLOUD_NAME=
+CLOUDINARY_API_KEY=
+CLOUDINARY_SECRET_KEY=
+ACCESS_TOKEN_SECRET_KEY=
+REFRESH_TOKEN_SECRET_KEY=
+EMAIL_HOST=
+EMAIL_PORT=
+EMAIL_USER=
+EMAIL_PASS=
 ```
 
 #### 4.Run the application in development mode:
