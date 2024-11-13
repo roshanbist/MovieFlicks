@@ -178,5 +178,8 @@ There are two models designed in this project.
 
 ## Screenshots
 
+\*\* Password Reset Request
 ![Password Reset Request](./src/screenshots/password-reset-request.png)
+
+\*\* Password Reset Successfully
 ![Password Reset Success](./src/screenshots/password-reset-success.png)
