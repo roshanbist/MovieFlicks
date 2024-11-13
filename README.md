@@ -177,6 +177,3 @@ There are two models designed in this project.
 - **Mailtrap** - Email testing tool to catch and preview emails in a safe environment
 
 ## Screenshots
-
-![Password Reset Request](./src/screenshots/password-reset-request.png)
-![Password Reset Success](./src/screenshots/password-reset-success.png)
