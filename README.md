@@ -178,8 +178,10 @@ There are two models designed in this project.
 
 ## Screenshots
 
-\*\* Password Reset Request
-![Password Reset Request](./src/screenshots/password-reset-request.png)
+Screenshots of Email Testing for Password Reset
 
-\*\* Password Reset Successfully
+- Screenshots of Email Testing for Password Reset:
+  ![Password Reset Request](./src/screenshots/password-reset-request.png)
+
+-Password Reset Successfully:
 ![Password Reset Success](./src/screenshots/password-reset-success.png)
