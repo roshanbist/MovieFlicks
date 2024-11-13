@@ -149,7 +149,7 @@ There are two models designed in this project.
 | GET         | `/api/v1/movies`                        | Retrieve a list of all movies.                                                      |
 | GET         | `/api/v1/movies/:id`                    | Retrieve detailed information of a single movie by its ID.                          |
 | GET         | `/api/v1/movies?page=1&limit=10`        | Retrieve a paginated list of movies, with the specified page and limit.             |
-| GET         | `/api/v1/movies?sort=duration,-ratings` | Retrieve a list of movies, sorted by duration (ascending) and ratings (descending). |
+| GET         | `/api/v1/movies?sort=duration,-ratings` | Retrieve a list of movies, sorted by duration (Ascending) and ratings (Descending). |
 | POST        | `/api/v1/movies`                        | Add a new movie to the database. (user logged in required).                         |
 | PUT         | `/api/v1/movies/:id`                    | Update the details of an existing movie by its ID. (user logged in required).       |
 | DELETE      | `/api/v1/movies/:id`                    | Delete a movie from the database by its ID (admin access required).                 |
