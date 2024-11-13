@@ -22,7 +22,7 @@ Key features includes:
 - ✅ User registration with duplicate checks
 - ✅ Password encryption using bcrypt
 - ✅ Password Recovery: Forgot password and reset password functionality, with secure email notifications
-- ✅ Email Notifications via Nodemailer for password reset links and confirmation of successful password changes
+- ✅ Email Notifications via Nodemailer for password reset links and confirmation of successful password reset
 - ✅ Mailtrap integration for email functionality testing
 - ✅ Environment configuration using dotenv
 
@@ -56,18 +56,18 @@ PORT=your_server_port_address
 MONGO_URI=your_mongodb_uri
 JWT_SECRET=your_jwt_secret
 
-MONGODB_URL=<MongoB connection URI>
-PORT=<Server Port>
-CLIENT_URL=
-CLOUDINARY_CLOUD_NAME=
-CLOUDINARY_API_KEY=
-CLOUDINARY_SECRET_KEY=
-ACCESS_TOKEN_SECRET_KEY=
-REFRESH_TOKEN_SECRET_KEY=
-EMAIL_HOST=
-EMAIL_PORT=
-EMAIL_USER=
-EMAIL_PASS=
+MONGODB_URL=MongoDB connection URI
+PORT=Server port
+CLIENT_URL=URL of the client application
+CLOUDINARY_CLOUD_NAME=Cloudinary cloud name for image storage
+CLOUDINARY_API_KEY=Cloudinary API key
+CLOUDINARY_SECRET_KEY=Cloudinary secret key
+ACCESS_TOKEN_SECRET_KEY=Secret key for signing access tokens (JWT)
+REFRESH_TOKEN_SECRET_KEY=Secret key for signing refresh tokens (JWT)
+EMAIL_HOST=SMTP server host for sending emails (e.g., smtp.mailtrap.io)
+EMAIL_PORT=SMTP server port (e.g., 2525 for Mailtrap)
+EMAIL_USER=SMTP server user credential
+EMAIL_PASS=SMTP server password credential
 ```
 
 #### 4.Run the application in development mode:
