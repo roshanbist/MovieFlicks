@@ -183,5 +183,5 @@ Screenshots of Email Testing for Password Reset
 - Screenshots of Email Testing for Password Reset:
   ![Password Reset Request](./src/screenshots/password-reset-request.png)
 
--Password Reset Successfully:
-![Password Reset Success](./src/screenshots/password-reset-success.png)
+- Password Reset Successfully:
+  ![Password Reset Success](./src/screenshots/password-reset-success.png)
