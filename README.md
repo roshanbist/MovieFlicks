@@ -7,7 +7,7 @@ Movieflicks is a backend API project developed with Express.js and MongoDB for m
 - [Features](#features)
 - [Getting Started](#getting-started)
 - [Models](#models)
-- [API Reference](#api-reference)
+- [API Endpoints](#api-endpoints)
 - [Technologies Used](#technologies-used)
 
 ## Features
@@ -118,93 +118,49 @@ There are two models designed in this project.
 | passwordResetToken           | String | No       | No     | Temporary token for password reset       |
 | passwordResetTokenExpireTime | Date   | No       | No     | Expiration time for password reset token |
 
-## API Reference
+## API Endpoints
+
+## Auth API
+
+| HTTP METHOD | Endpoint                             | Description                                                                  |
+| :---------- | :----------------------------------- | :--------------------------------------------------------------------------- |
+| POST        | `/api/v1/auth/register`              | Register a new user.                                                         |
+| POST        | `/api/v1/auth/login`                 | Login in user and return access, refresh token.                              |
+| POST        | `/api/v1/auth/refresh`               | Renew access token using valid refresh token.                                |
+| POST        | `/api/v1/auth/forgot-password`       | Initiate password reset process by sending a reset link to the user's email. |
+| POST        | `/api/v1/auth/reset-passowrd/:token` | Reset user's password using the token sent in the reset link.                |
+| POST        | `/api/v1/auth/logout`                | Logout the user from the application clearing the authentication cookie.     |
 
 ## User API
 
-#### Register a new user
+| HTTP METHOD | Endpoint                        | Description                                                           |
+| :---------- | :------------------------------ | :-------------------------------------------------------------------- |
+| GET         | `/api/v1/users`                 | Retrieve the details of all users.                                    |
+| GET         | `/api/v1/users/:id`             | Retrieve detailed information of a single user by their ID.           |
+| POST        | `/api/v1/users/change-password` | Change the logged-in user's password.                                 |
+| PUT         | `/api/v1/users/:id`             | Update user information (only allowed for the logged-in user).        |
+| DELETE      | `/api/v1/users/:id`             | Delete a user (admin access required, users can't delete themselves). |
 
-```
-  POST /api/v1/auth/register
-```
+## Movie API
 
-| Parameter  | Type     | Description                             |
-| :--------- | :------- | :-------------------------------------- |
-| `username` | `string` | **Required**. Username of the new user. |
-| `email`    | `string` | **Required**. Email of the new user.    |
-| `password` | `string` | **Required**. Password of the new user. |
+| HTTP METHOD | Endpoint                                | Description                                                                         |
+| :---------- | :-------------------------------------- | :---------------------------------------------------------------------------------- |
+| GET         | `/api/v1/movies`                        | Retrieve a list of all movies.                                                      |
+| GET         | `/api/v1/movies/:id`                    | Retrieve detailed information of a single movie by its ID.                          |
+| GET         | `/api/v1/movies?page=1&limit=10`        | Retrieve a paginated list of movies, with the specified page and limit.             |
+| GET         | `/api/v1/movies?sort=duration,-ratings` | Retrieve a list of movies, sorted by duration (ascending) and ratings (descending). |
+| POST        | `/api/v1/movies`                        | Add a new movie to the database. (user logged in required).                         |
+| PUT         | `/api/v1/movies/:id`                    | Update the details of an existing movie by its ID. (user logged in required).       |
+| DELETE      | `/api/v1/movies/:id`                    | Delete a movie from the database by its ID (admin access required).                 |
 
-#### Login a user
+## Fiter Movie API
 
-```http
-  POST /api/v1/users/login
-```
-
-| Parameter  | Type     | Description                                |
-| :--------- | :------- | :----------------------------------------- |
-| `email`    | `string` | **Required**. Email for authentication.    |
-| `password` | `string` | **Required**. Password for authentication. |
-
-## Contact API
-
-#### Get all contacts
-
-```http
-  GET /api/v1/contacts
-```
-
-| Parameter       | Type     | Description                               |
-| :-------------- | :------- | :---------------------------------------- |
-| `Authorization` | `string` | **Required**. JWT token in Bearer format. |
-
-#### Get contact detail by ID
-
-```http
-  GET /api/v1/contacts/:id
-```
-
-| Parameter       | Type     | Description                                     |
-| :-------------- | :------- | :---------------------------------------------- |
-| `id`            | `string` | **Required**. ID of the contact to see details. |
-| `Authorization` | `string` | **Required**. JWT token in Bearer format.       |
-
-#### Create a new contact
-
-```http
-  POST /api/v1/contacts
-```
-
-| Parameter       | Type     | Description                                |
-| :-------------- | :------- | :----------------------------------------- |
-| `Authorization` | `string` | **Required**. JWT token in Bearer format.  |
-| `name`          | `string` | **Required**. Name of the contact.         |
-| `email`         | `string` | **Required**. Email of the contact.        |
-| `phone`         | `string` | **Required**. Phone number of the contact. |
-
-#### Update a contact
-
-```http
-  PUT /api/v1/contacts/:id
-```
-
-| Parameter       | Type     | Description                                    |
-| :-------------- | :------- | :--------------------------------------------- |
-| `id`            | `string` | **Required**. ID of the contact to update.     |
-| `Authorization` | `string` | **Required**. JWT token in Bearer format.      |
-| `name`          | `string` | **Optional**. New name of the contact.         |
-| `email`         | `string` | **Optional**. New email of the contact.        |
-| `phone`         | `string` | **Optional**. New phone number of the contact. |
-
-#### Delete a contact
-
-```http
-  DELETE /api/v1/contacts/:id
-```
-
-| Parameter       | Type     | Description                                |
-| :-------------- | :------- | :----------------------------------------- |
-| `id`            | `string` | **Required**. ID of the contact to delete. |
-| `Authorization` | `string` | **Required**. JWT token in Bearer format.  |
+| HTTP METHOD | Endpoint                                                                               | Description                                                       |
+| :---------- | :------------------------------------------------------------------------------------- | :---------------------------------------------------------------- |
+| GET         | `/api/v1/movies?name=inception`                                                        | Filter movies by name.                                            |
+| GET         | `/api/v1/movies?genres=Action,Thriller`                                                | Filter movies by genres.                                          |
+| GET         | `/api/v1/movies?min_duration=140&max_duration=190`                                     | Filter movies by duration range.                                  |
+| GET         | `/api/v1/moviesname=the&min_duration=135&genres=Action&sort=-duration&page=1&limit=10` | Filter and sort movies list by joining multiple query parameters. |
 
 ## Technologies Used
 
