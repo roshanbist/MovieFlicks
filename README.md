@@ -6,7 +6,7 @@ Movieflicks is a backend API project developed with Express.js and MongoDB for m
 
 - [Features](#features)
 - [Getting Started](#getting-started)
-- [Project Folder Structure](#project-folder-structure)
+- [Models](#models)
 - [API Reference](#api-reference)
 - [Technologies Used](#technologies-used)
 
@@ -52,10 +52,6 @@ $ npm install
 #### 3.Set up environment variables
 
 ```bash
-PORT=your_server_port_address
-MONGO_URI=your_mongodb_uri
-JWT_SECRET=your_jwt_secret
-
 MONGODB_URL=MongoDB connection URI
 PORT=Server port
 CLIENT_URL=URL of the client application
@@ -70,45 +66,57 @@ EMAIL_USER=SMTP server user credential
 EMAIL_PASS=SMTP server password credential
 ```
 
-#### 4.Run the application in development mode:
+#### 4.Run the server:
+
+- In development mode
 
 ```bash
 $ npm run dev
 ```
 
-The API will now be running on http://localhost:${PORT}.
+- In production mode
 
-## Project Folder Structure
+```bash
+$ npm run prod
+```
 
-```
-└── 📁src
-    └── 📁controllers
-        └── contactsController.ts
-        └── InvalidRouteController.ts
-        └── userController.ts
-    └── 📁middleware
-        └── errorHandlerMiddleware.ts
-        └── validateTokenMiddleware.ts
-    └── 📁model
-        └── ContactModel.ts
-        └── UserModel.ts
-    └── 📁routes
-        └── contactsRoutes.ts
-        └── userRoutes.ts
-    └── 📁services
-        └── contactsService.ts
-        └── userService.ts
-    └── 📁types
-        └── all.ts
-        └── express.d.ts
-    └── 📁utils
-        └── asyncErrorHandler.ts
-        └── AuthUtil.ts
-        └── CustomError.ts
-        └── passport.ts
-    └── app.ts
-    └── server.ts
-```
+The server should now be running at http://localhost:${PORT}.
+
+## Models
+
+There are two models designed in this project.
+
+### Movie Model
+
+| Field              | Type       | Required | Unique                              | Validation/Constraints                           |
+| :----------------- | :--------- | :------- | ----------------------------------- | ------------------------------------------------ |
+| name               | String Yes | Yes      | Min 4 characters, Max 50 characters |
+| description        | String     | Yes      | No                                  | Brief movie description                          |
+| releaseYear        | Number     | Yes      | No                                  | Release year of the movie                        |
+| duration           | Number     | Yes      | No                                  | Duration in minutes                              |
+| ratings            | Number     | Yes      | No                                  | Must be between 1 and 10                         |
+| director           | String     | Yes      | No                                  | Director's name                                  |
+| actors             | [String]   | Yes      | No                                  | Array of actor names, cannot be empty            |
+| images             | [String]   | Yes      | No                                  | Array of image URLs                              |
+| genres             | [String]   | Yes      | No                                  | Array, enum of valid genres: Action, Drama, etc. |
+| imagesCloudinaryId | [String]   | No       | No                                  | Cloudinary IDs for images                        |
+| createdAt          | Date       | No       | No                                  | Defaults to current date                         |
+
+### User Model
+
+| Field                        | Type   | Required | Unique | Validation/Constraints                   |
+| :--------------------------- | :----- | :------- | ------ | ---------------------------------------- |
+| name                         | String | Yes      | No     | Min 2 characters, Max 30 characters      |
+| username                     | String | Yes      | Yes    | Min 5 characters, Max 20 characters      |
+| email                        | String | Yes      | Yes    | Must be a valid email format             |
+| password                     | String | Yes      | No     | Min 6 characters                         |
+| confirmPassword              | String | Yes      | No     | Must match password                      |
+| avatar                       | String | Yes      | No     | URL for avatar                           |
+| role                         | String | No       | No     | Enum: user, admin (default: user)        |
+| avatarCloudinaryId           | String | Yes      | No     | Cloudinary ID for avatar                 |
+| refreshToken                 | String | No       | No     | For handling JWT refresh                 |
+| passwordResetToken           | String | No       | No     | Temporary token for password reset       |
+| passwordResetTokenExpireTime | Date   | No       | No     | Expiration time for password reset token |
 
 ## API Reference
 
