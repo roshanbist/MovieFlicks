@@ -49,14 +49,14 @@ To get started with the project, follow the steps below:
 
 ## Using Docker (Preferred Method)
 
-#### 1.Clone the repository:
+#### 1. Clone the repository:
 
 ```bash
 $ git clone git@github.com:roshanbist/MovieFlicks.git
 $ cd MovieFlicks
 ```
 
-#### 2.Set up environment variables
+#### 2. Set up environment variables
 
 Create a .env file in the root directory and configure the following environment variables:
 
@@ -100,17 +100,17 @@ $ git clone git@github.com:roshanbist/MovieFlicks.git
 $ cd MovieFlicks
 ```
 
-#### 2.Install dependencies:
+#### 2. Install dependencies:
 
 ```bash
 $ npm install
 ```
 
-#### 3.Set up environment variables
+#### 3. Set up environment variables
 
 Ensure the .env file is configured as described above.
 
-#### 4.Run the server:
+#### 4. Run the server:
 
 Update the dev script in the package.json file
 
@@ -173,6 +173,8 @@ There are two models designed in this project.
 | passwordResetTokenExpireTime | Date   | No       | No     | Expiration time for password reset token |
 
 ## API Endpoints
+
+Movieflicks offers a variety of API endpoints to manage users and movies. These endpoints support tasks like authentication, CRUD operations, and filtering movies. Below is a list of the main endpoints with their descriptions.
 
 ## Auth API
 
