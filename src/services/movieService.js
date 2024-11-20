@@ -77,8 +77,12 @@ const createNewMovie = async (movieData) => {
 
 const updateMovieById = async (id, movieData) => {
   try {
+    let oldImagesCloudinaryId;
     const movie = await MovieModel.findById(id);
-    const oldImagesCloudinaryId = movie?.imagesCloudinaryId;
+
+    if (movieData.imagesCloudinaryId) {
+      oldImagesCloudinaryId = movie?.imagesCloudinaryId;
+    }
 
     const result = await MovieModel.findByIdAndUpdate(id, movieData, {
       new: true,

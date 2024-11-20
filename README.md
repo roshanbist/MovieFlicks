@@ -113,7 +113,7 @@ There are two models designed in this project.
 | password                     | String | Yes      | No     | Min 6 characters                         |
 | confirmPassword              | String | Yes      | No     | Must match password                      |
 | avatar                       | String | Yes      | No     | URL for avatar                           |
-| role                         | String | No       | No     | Enum: user, admin (default: user)        |
+| role                         | String | No       | No     | default: user                            |
 | avatarCloudinaryId           | String | Yes      | No     | Cloudinary ID for avatar                 |
 | refreshToken                 | String | No       | No     | For handling JWT refresh                 |
 | passwordResetToken           | String | No       | No     | Temporary token for password reset       |

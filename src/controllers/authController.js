@@ -15,6 +15,7 @@ import {
   verifyRefreshToken,
 } from '../utils/authUtil.js';
 import { cookieConfigOption } from '../config/constants.js';
+import { filterObjData } from '../utils/generalUtils.js';
 
 export const register = asyncErrorHandler(async (req, res, next) => {
   if (!req.file) {
@@ -30,7 +31,11 @@ export const register = asyncErrorHandler(async (req, res, next) => {
   }
 
   const userData = new UserModel({
-    ...req.body,
+    name: req.body.name,
+    username: req.body.username,
+    email: req.body.email,
+    password: req.body.password,
+    confirmPassword: req.body.confirmPassword,
     avatar: url,
     avatarCloudinaryId: public_id,
   });

@@ -23,8 +23,12 @@ const changePassword = async (id, newPassword, newConfirmPassword) => {
 
 const updateUserById = async (id, data) => {
   try {
+    let oldAvatarCloudinaryId;
     const user = await UserModel.findById(id);
-    const oldAvatarCloudinaryId = user?.avatarCloudinaryId;
+
+    if (data.avatarCloudinaryId) {
+      oldAvatarCloudinaryId = user?.avatarCloudinaryId;
+    }
 
     const result = await UserModel.findByIdAndUpdate(id, data, {
       new: true,
