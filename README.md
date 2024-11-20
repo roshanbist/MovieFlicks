@@ -6,8 +6,16 @@ Movieflicks is a backend API project developed with Express.js and MongoDB for m
 
 - [Features](#features)
 - [Getting Started](#getting-started)
+
+  - [Using Docker (Preferred Method)](#using-docker-preferred-method)
+  - [Without Docker](#without-docker)
+
 - [Models](#models)
 - [API Endpoints](#api-endpoints)
+  - [Auth-api](#auth-api)
+  - [User-api](#user-api)
+  - [Movie-api](#movie-api)
+  - [Filter Movie-api](#filter-movie-api)
 - [Technologies Used](#technologies-used)
 - [Screenshots](#screenshots)
 
@@ -26,6 +34,7 @@ Key features includes:
 - ✅ Email Notifications via Nodemailer for password reset links and confirmation of successful password reset
 - ✅ Mailtrap integration for email functionality testing
 - ✅ Environment configuration using dotenv
+- ✅ Docker for containerization
 
 ## Getting Started
 
@@ -33,9 +42,12 @@ Key features includes:
 
 - node `^19.2.0`
 - npm `^9.2.0`
+- [Docker](https://www.docker.com/)
 
 Make sure you have [npm](https://www.npmjs.com/get-npm) installed globally.
 To get started with the project, follow the steps below:
+
+## Using Docker (Preferred Method)
 
 #### 1.Clone the repository:
 
@@ -44,13 +56,9 @@ $ git clone git@github.com:roshanbist/MovieFlicks.git
 $ cd MovieFlicks
 ```
 
-#### 2.Install dependencies:
+#### 2.Set up environment variables
 
-```bash
-$ npm install
-```
-
-#### 3.Set up environment variables
+Create a .env file in the root directory and configure the following environment variables:
 
 ```bash
 MONGODB_URL=MongoDB connection URI
@@ -67,21 +75,66 @@ EMAIL_USER=SMTP server user credential
 EMAIL_PASS=SMTP server password credential
 ```
 
+#### 3. Build and run the application with Docker Compose
+
+Use the following command to build the Docker image and start the container. Once the containers are running, the backend server will be available at http://localhost:${PORT}.
+
+```bash
+$ docker compose up --build
+```
+
+#### 4. Watch for file changes with Docker Compose Watch
+
+This command will monitor changes in your project files and automatically sync them to the container.
+
+```bash
+$ docker compose watch
+```
+
+## Without Docker
+
+#### 1.Clone the repository:
+
+```bash
+$ git clone git@github.com:roshanbist/MovieFlicks.git
+$ cd MovieFlicks
+```
+
+#### 2.Install dependencies:
+
+```bash
+$ npm install
+```
+
+#### 3.Set up environment variables
+
+Ensure the .env file is configured as described above.
+
 #### 4.Run the server:
 
-- In development mode
+Update the dev script in the package.json file
+
+```bash
+
+    "dev": "cross-env NODE_ENV=development nodemon --watch src/**/*.js --exec node src/server.js",
+
+```
+
+Then start the server:
+
+- Development mode
 
 ```bash
 $ npm run dev
 ```
 
-- In production mode
+- Production mode
 
 ```bash
 $ npm run prod
 ```
 
-The server should now be running at http://localhost:${PORT}.
+The server will now be running at http://localhost:${PORT}.
 
 ## Models
 
